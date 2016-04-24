@@ -2,4 +2,4 @@
 
 set -e
 docker build -t composer . &>/dev/null
-docker run -it -v /var/run/docker.sock:/var/run/docker.sock --rm composer "$@"
+docker run -a stdin -t -v /var/run/docker.sock:/var/run/docker.sock --rm composer "$@"
