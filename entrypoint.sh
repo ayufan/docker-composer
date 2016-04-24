@@ -128,10 +128,10 @@ case "$1" in
 		# Taken from Dokku: https://github.com/dokku/dokku/blob/master/plugins/git/commands#L106
 		APP="$(echo "$2" | perl -pe 's/(?<!\\)'\''//g' | sed 's/\\'\''/'\''/g' | sed 's/^\///g')"
 		cd "$APP/"
-		git init
+		git init >/dev/null
 		GIT="$1"
 		shift 2
-		"$GIT" "$@"
+		"$GIT" "." "$@"
 		;;		
 
 	build|config|down|exec|kill|logs|pause|port|ps|pull|restart|rm|run|scale|start|stop|unpause|up)
