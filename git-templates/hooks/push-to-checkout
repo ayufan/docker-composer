@@ -13,4 +13,4 @@ git update-index -q --refresh && git read-tree -u -m HEAD "$1" || {
 }
 
 docker-compose up -d --build --remove-orphans
-git tag -f latest
+git tag "$1" -f latest
