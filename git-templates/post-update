@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
 set -eo pipefail
-
-COMPOSE_FILE=docker-compose.yml
-[[ -f docker-compose-production.yml ]] && COMPOSE_FILE=docker-compose-production.yml
-
-docker-compose -f "$COMPOSE_FILE" build
-docker-compose -f "$COMPOSE_FILE" up -d
+docker-compose up -d --build --remove-orphans
+git tag -f latest
