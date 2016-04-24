@@ -1,0 +1,7 @@
+## Use as container:
+```
+curl -L https://raw.githubusercontent.com/ayufan/docker-composer/master/run.sh > /usr/local/bin/docker-composer
+chmod +x /usr/local/bin/docker-composer
+useradd -G docker -s /usr/local/bin/docker-composer compose
+docker pull ayufan/docker-composer
+```
