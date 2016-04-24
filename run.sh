@@ -4,8 +4,7 @@
 
 set -e
 
-VERSION="1.7.0"
-IMAGE="ayufan/composer:latest"
+IMAGE="ayufan/docker-composer:latest"
 DOCKER_RUN_OPTIONS=""
 DOCKER_ADDR=""
 VOLUMES="-v /srv/apps:/srv/apps"
