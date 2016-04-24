@@ -125,7 +125,9 @@ case "$1" in
 
 	git-*)
 		require_app "$@"
-		cd $2
+		# Taken from Dokku: https://github.com/dokku/dokku/blob/master/plugins/git/commands#L106
+		APP="$(echo "$2" | perl -pe 's/(?<!\\)'\''//g' | sed 's/\\'\''/'\''/g' | sed 's/^\///g')"
+		cd "$APP/"
 		git init
 		GIT="$1"
 		shift 2
