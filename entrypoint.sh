@@ -113,7 +113,7 @@ case "$1" in
 		require_app "$@"
 		APP="$2"
 		shift 2
-		docker stats --all "$@" $(docker inspect --format '{{.Name}}' $(containers "$APP"))
+		docker stats "$@" $(docker inspect --format '{{.Name}}' $(containers "$APP"))
 		;;
 
 	services)
@@ -125,7 +125,7 @@ case "$1" in
 
 	git-*)
 		require_app "$@"
-		cd "$2/"
+		cd $2
 		git init
 		GIT="$1"
 		shift 2

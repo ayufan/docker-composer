@@ -27,4 +27,8 @@ if [ -t 0 ]; then
     DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -i"
 fi
 
-exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $VOLUMES $IMAGE "$@"
+if [[ "$1" == "-c" ]]; then
+        exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $VOLUMES $IMAGE $2
+else    
+        exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $VOLUMES $IMAGE "$@"
+fi
