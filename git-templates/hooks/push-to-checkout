@@ -6,6 +6,9 @@ TO="$1"
 
 echo >&2 updating from "$FROM" to "$1"...
 
+git reset --hard
+trap 'git reset --hard' EXIT
+
 git update-index -q --refresh && git read-tree -u -m HEAD "$1" || {
     status=$?
     echo >&2 read-tree failed
@@ -13,4 +16,5 @@ git update-index -q --refresh && git read-tree -u -m HEAD "$1" || {
 }
 
 docker-compose up -d --build --remove-orphans
+trap - EXIT
 git tag "$1" -f latest
