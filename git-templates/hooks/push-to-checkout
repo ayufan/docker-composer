@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+FROM=$(git rev-parse HEAD)
+TO="$1"
+
+echo >&2 updating from "$FROM" to "$1"...
+
+git update-index -q --refresh && git read-tree -u -m HEAD "$1" || {
+    status=$?
+    echo >&2 read-tree failed
+    exit $status
+}
+
+docker-compose up -d --build --remove-orphans
+git tag -f latest
