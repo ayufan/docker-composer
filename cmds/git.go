@@ -10,6 +10,7 @@ import (
 	"github.com/ayufan/docker-composer/helpers"
 )
 
+
 func runGitReceivePackCommand(c *cli.Context) {
 	app, err := compose.ExistingApplication(c.Args()...)
 	if err != nil {
