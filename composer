@@ -16,6 +16,11 @@ containers() {
 }
 
 health() {
+	if [[ $# -eq 0 ]]; then
+		echo not running
+		return
+	fi
+
 	STATUS=( $(docker inspect --format '{{.State.Running}}' "$@" 2>/dev/null | sort -u) )
 	if [[ -n "${STATUS[1]}" ]]; then
 		echo partial
@@ -29,30 +34,26 @@ health() {
 }
 
 case "$1" in
-	all)
-		ls -1
+	ls)
+		if [[ "$2" == "--detail" ]]; then
+			find * -maxdepth 0 -type d -print0 | xargs -0 $0 ps
+		else
+			find * -maxdepth 0 -type d
+		fi
 		;;
 
 	status)
-		ls -1 | while read APP; do
-			(
-				cd $APP
-				echo -e "$APP\t$(health $(containers))"
-			)
-		done
-		;;
-
-	all-detail)
-		ls -1 | while read APP; do
-			(
-				cd $APP/
-				docker-compose ps
-			)
-		done
-		;;
-
-	deploy-all)
-		ls -1 | xargs -0 $0 deploy 
+		if [[ $# -eq 1 ]]; then
+			find * -maxdepth 0 -type d -print0 | xargs -0 $0 status
+		elif [[ $# -eq 2 ]]; then
+			cd "$2/"
+			echo -e "$2\t$(health $(containers))"
+		else
+			shift
+			for APP in "$@"; do
+				$0 status "$APP"
+			done
+		fi
 		;;
 
 	create)
@@ -75,6 +76,10 @@ case "$1" in
 
 	deploy)
 		require_app "$@"
+		if [[ "$2" == "--all" ]]; then
+			find * -maxdepth 0 -type d -print0 | xargs -0 $0 deploy
+			exit 0
+		fi
 		cd "$2/"
 		shift 2
 		docker-compose up --build --remove-orphans -d
@@ -111,9 +116,14 @@ case "$1" in
 
 	stats)
 		require_app "$@"
-		APP="$2"
+		cd "$2/"
 		shift 2
-		docker stats "$@" $(docker inspect --format '{{.Name}}' $(containers "$APP"))
+		CONTAINERS=$(containers)
+		if [[ -z "$CONTAINERS" ]]; then
+			echo "No containers." 1>&2
+			exit 1
+		fi
+		docker stats "$@" $(docker inspect --format '{{.Name}}' $CONTAINERS)
 		;;
 
 	services)
@@ -154,16 +164,15 @@ Usage:
   $0 command [options]
 
 Composer Commands:
-  all                List applications
+  ls [--detail]     List applications
   status             Show status of all applications
   create APP         Initialize application
   destroy APP        Destroy application
   edit APP           Edit configuration
   revert APP         Revert configuration
-  deploy APP         Deploy application
+  deploy APP|--all   Deploy application
   stats APP          Show application statistics
   services APP       Show application services
-  deploy-all         Re-deploy all applications
 
 Docker Compose Commands:
   build APP          Build or rebuild services
