@@ -47,7 +47,7 @@ case "$1" in
 			find * -maxdepth 0 -type d -print0 | xargs -0 $0 status
 		elif [[ $# -eq 2 ]]; then
 			cd "$2/"
-			echo -e "$2\t$(health $(containers))"
+			echo -e "$2\t$(health $(containers))\t$(git symbolic-ref -q HEAD 2>/dev/null)"
 		else
 			shift
 			for APP in "$@"; do
@@ -56,14 +56,14 @@ case "$1" in
 		fi
 		;;
 
-	create)
+	init)
 		require_app "$@"
 		git init "$2/"
 		cd "$2/"
 		shift 2
 		;;
 
-	destroy)
+	release)
 		require_app "$@"
 		APP="$2"
 		shift 2
@@ -106,11 +106,11 @@ case "$1" in
 		git tag -f latest
 		;;
 
-	revert)
+	switch)
 		require_app "$@"
 		cd "$2/"
 		shift 2
-		git reset --hard latest
+		git reset --hard "$@"
 		docker-compose up --build --remove-orphans -d
 		;;
 
@@ -144,7 +144,7 @@ case "$1" in
 		"$GIT" "." "$@"
 		;;		
 
-	build|config|down|exec|kill|logs|pause|port|ps|pull|restart|rm|run|scale|start|stop|unpause|up|events)
+	build|create|config|down|exec|kill|logs|pause|port|ps|pull|restart|rm|run|scale|start|stop|unpause|up|events)
 		require_app "$@"
 		CMD="$1"
 		APP="$2"
@@ -165,11 +165,11 @@ Usage:
 
 Composer Commands:
   ls [--detail]      List applications
-  status             Show status of all applications
-  create APP         Initialize application
-  destroy APP        Destroy application
+  status [APP...]    Show status of all applications
+  init APP           Initialize application
+  release APP        Destroy and remove application
   edit APP           Edit configuration
-  revert APP         Revert configuration
+  switch APP REF     Switch application configuration
   deploy APP|--all   Deploy application
   stats APP          Show application statistics
   services APP       Show application services
@@ -177,6 +177,7 @@ Composer Commands:
 Docker Compose Commands:
   build APP          Build or rebuild services
   config APP         Validate and view the compose file
+  create APP         Create services
   down APP           Stop and remove containers, networks, images, and volumes
   events APP         Receive real time events from containers
   exec APP           Execute a command in a running container
