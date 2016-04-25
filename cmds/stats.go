@@ -1,0 +1,51 @@
+package cmds
+
+import (
+	"os"
+
+	"github.com/Sirupsen/logrus"
+	"github.com/codegangsta/cli"
+
+	"github.com/ayufan/docker-composer/compose"
+	"github.com/ayufan/docker-composer/helpers"
+)
+
+func runStatsCommand(c *cli.Context) {
+	apps, err := compose.Apps(c.Args()...)
+	if err != nil {
+		logrus.Fatalln(err)
+	}
+
+	var names []string
+	for _, app := range apps {
+		appNames, err := app.ContainerNames()
+		if err != nil {
+			continue
+		}
+		names = append(names, appNames...)
+	}
+
+	cmd := helpers.Command("docker", "stats")
+	cmd.Args = append(cmd.Args, names...)
+	cmd.Stdout = os.Stdout
+	err = cmd.Run()
+	if err != nil {
+		logrus.Fatalln("Run:", err)
+	}
+}
+
+func init() {
+	registerCommand(cli.Command{
+		Name:      "stats",
+		Action:    runStatsCommand,
+		Usage:     "show statistics of all applications",
+		Category:  "global",
+		ArgsUsage: "APP...",
+		Flags: []cli.Flag{
+			cli.BoolFlag{
+				Name:  "detail",
+				Usage: "show detailed status of application",
+			},
+		},
+	})
+}

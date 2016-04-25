@@ -142,7 +142,7 @@ case "$1" in
 		GIT="$1"
 		shift 2
 		"$GIT" "." "$@"
-		;;		
+		;;
 
 	build|create|config|down|exec|kill|logs|pause|port|ps|pull|restart|rm|run|scale|start|stop|unpause|up|events)
 		require_app "$@"
