@@ -8,7 +8,7 @@ RUN ["git", "config", "--global", "user.email", "you@example.com"]
 
 ENV APPS_DIR=/srv/apps
 ADD /demo /srv/apps/demo/
-# VOLUME ["/srv/apps"]
+VOLUME ["/srv/apps"]
 ADD / /
 
 ENTRYPOINT ["/composer"]
