@@ -11,4 +11,4 @@ ADD /demo /srv/apps/demo/
 # VOLUME ["/srv/apps"]
 ADD / /
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/composer"]
