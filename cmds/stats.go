@@ -24,6 +24,9 @@ func runStatsCommand(c *cli.Context) {
 		}
 		names = append(names, appNames...)
 	}
+	if len(names) == 0 {
+		logrus.Fatalln("No containers.")
+	}
 
 	cmd := helpers.Command("docker", "stats")
 	cmd.Args = append(cmd.Args, names...)
@@ -41,11 +44,5 @@ func init() {
 		Usage:     "show statistics of all applications",
 		Category:  "global",
 		ArgsUsage: "APP...",
-		Flags: []cli.Flag{
-			cli.BoolFlag{
-				Name:  "detail",
-				Usage: "show detailed status of application",
-			},
-		},
 	})
 }

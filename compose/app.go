@@ -123,7 +123,7 @@ func (a *App) Containers() (containers []string, err error) {
 
 func (a *App) ContainerNames() (names []string, err error) {
 	containers, err := a.Containers()
-	if err != nil {
+	if err != nil || len(containers) == 0 {
 		return
 	}
 
