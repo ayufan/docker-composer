@@ -144,7 +144,7 @@ case "$1" in
 		"$GIT" "." "$@"
 		;;		
 
-	build|config|down|exec|kill|logs|pause|port|ps|pull|restart|rm|run|scale|start|stop|unpause|up)
+	build|config|down|exec|kill|logs|pause|port|ps|pull|restart|rm|run|scale|start|stop|unpause|up|events)
 		require_app "$@"
 		CMD="$1"
 		APP="$2"
@@ -154,7 +154,7 @@ case "$1" in
 		docker-compose "$CMD" "$@"
 		;;
 
-	events|version)
+	version)
 		docker-compose "$@"
 		;;
 
@@ -178,7 +178,7 @@ Docker Compose Commands:
   build APP          Build or rebuild services
   config APP         Validate and view the compose file
   down APP           Stop and remove containers, networks, images, and volumes
-  events             Receive real time events from containers
+  events APP         Receive real time events from containers
   exec APP           Execute a command in a running container
   help               Get help on a command
   kill APP           Kill containers
