@@ -4,7 +4,6 @@ import (
 	"os"
 	"errors"
 	"fmt"
-	"strconv"
 )
 
 func Apps(filters... string) (apps []*App, err error) {
@@ -39,12 +38,7 @@ func Application(name... string) (app *App, err error) {
 	if len(name) > 1 {
 		return nil, errors.New("specify only one application name")
 	}
-	appName, err := strconv.Unquote(name[0])
-	if err != nil {
-		appName = name[0]
-		err = nil
-	}
-	app = &App{Name: appName}
+	app = &App{Name: name[0]}
 	if !app.IsValid() {
 		return nil, fmt.Errorf("%v is invalid", app.Name)
 	}
