@@ -5,9 +5,11 @@ import (
 	"path"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/codegangsta/cli"
+
 	"github.com/ayufan/docker-composer/cmds"
 	"github.com/ayufan/docker-composer/compose"
-	"github.com/codegangsta/cli"
+	"github.com/mattn/go-shellwords"
 )
 
 func main() {
@@ -34,6 +36,10 @@ func main() {
 			Usage:       "Directory where all the apps are stored",
 			Destination: &compose.AppsDirectory,
 		},
+		cli.StringFlag{
+			Name:  "c",
+			Usage: "Custom command to execute",
+		},
 	}
 
 	// logs
@@ -56,9 +62,24 @@ func main() {
 		return nil
 	}
 
-	app.Commands = cmds.Commands
+	defaultAction := app.Action
+	app.Action = func(c *cli.Context) {
+		if command := c.String("c"); command != "" {
+			args, err := shellwords.Parse(command)
+			if err != nil {
+				logrus.Fatalln(err)
+			}
 
-	if err := app.Run(os.Args); err != nil {
-		logrus.Fatal(err)
+			args = append([]string{os.Args[0]}, args...)
+			err = app.Run(args)
+			if err != nil {
+				logrus.Fatalln(err)
+			}
+		} else {
+			defaultAction(c)
+		}
 	}
+
+	app.Commands = cmds.Commands
+	app.RunAndExitOnError()
 }
