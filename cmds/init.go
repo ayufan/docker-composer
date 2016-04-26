@@ -3,8 +3,8 @@ package cmds
 import (
 	"os"
 
-	"github.com/codegangsta/cli"
 	"github.com/Sirupsen/logrus"
+	"github.com/codegangsta/cli"
 
 	"github.com/ayufan/docker-composer/compose"
 )
@@ -70,15 +70,15 @@ func init() {
 		ArgsUsage: "APP",
 		Flags: []cli.Flag{
 			cli.BoolFlag{
-				Name: "force",
+				Name:  "force",
 				Usage: "Unconditionally remove",
 			},
 			cli.BoolFlag{
-				Name: "volumes",
+				Name:  "volumes",
 				Usage: "Remove data volumes",
 			},
 			cli.StringFlag{
-				Name: "rmi",
+				Name:  "rmi",
 				Usage: "Remove images, type may be one of: 'all' to remove all images, or 'local' to remove only images that don't have an custom name set by the `image` field",
 			},
 		},

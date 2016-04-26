@@ -7,9 +7,9 @@ import (
 
 	"github.com/Sirupsen/logrus"
 
+	"fmt"
 	"github.com/ayufan/docker-composer/helpers"
 	"io/ioutil"
-	"fmt"
 )
 
 var AppsDirectory string
@@ -67,10 +67,28 @@ func (a *App) Compose(action string, args ...string) (err error) {
 	return cmd.Run()
 }
 
-func (a *App) Git(args... string) (err error) {
-	cmd := helpers.Compose("-C", a.Path(), args...)
+func (a *App) Git(args ...string) (err error) {
+	cmd := helpers.Git(args...)
+	cmd.Dir = a.Path()
 	cmd.Stdout = os.Stdout
 	return cmd.Run()
+}
+
+func (a *App) Changed() (bool, error) {
+	cmd := helpers.Git("status", "-s")
+	cmd.Dir = a.Path()
+	data, err := cmd.Output()
+	if err != nil {
+		return false, err
+	}
+	if len(data) == 0 {
+		return false, nil
+	}
+	return true, nil
+}
+
+func (a *App) Commit(message string) error {
+	return a.Git("commit", "-m", message)
 }
 
 func (a *App) Tag() (err error) {
@@ -90,7 +108,7 @@ func (a *App) Validate() (err error) {
 	return cmd.Run()
 }
 
-func (a *App) Deploy(args... string) (err error) {
+func (a *App) Deploy(args ...string) (err error) {
 	cmd := helpers.Compose("up", a.Path(), "--build", "--remove-orphans", "-d")
 	cmd.Args = append(cmd.Args, args...)
 	cmd.Stdout = os.Stdout
@@ -202,7 +220,7 @@ func (a *App) Exists() bool {
 	return true
 }
 
-func (a *App) Match(filters... string) bool {
+func (a *App) Match(filters ...string) bool {
 	if len(filters) == 0 {
 		return true
 	}

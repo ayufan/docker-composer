@@ -2,7 +2,7 @@ package helpers
 
 import "strings"
 
-func Lines(data []byte) ([]string) {
+func Lines(data []byte) []string {
 	if len(data) == 0 {
 		return nil
 	}

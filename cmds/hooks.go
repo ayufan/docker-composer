@@ -1,8 +1,8 @@
 package cmds
 
 import (
-	"github.com/codegangsta/cli"
 	"github.com/Sirupsen/logrus"
+	"github.com/codegangsta/cli"
 
 	"github.com/ayufan/docker-composer/compose"
 )

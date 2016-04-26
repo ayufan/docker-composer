@@ -1,12 +1,12 @@
 package compose
 
 import (
-	"os"
 	"errors"
 	"fmt"
+	"os"
 )
 
-func Apps(filters... string) (apps []*App, err error) {
+func Apps(filters ...string) (apps []*App, err error) {
 	dir, err := os.Open(AppsDirectory)
 	if err != nil {
 		return
@@ -31,7 +31,7 @@ func Apps(filters... string) (apps []*App, err error) {
 	return
 }
 
-func Application(name... string) (app *App, err error) {
+func Application(name ...string) (app *App, err error) {
 	if len(name) == 0 {
 		return nil, errors.New("specify application name")
 	}
@@ -45,7 +45,7 @@ func Application(name... string) (app *App, err error) {
 	return
 }
 
-func ExistingApplication(name... string) (app *App, err error) {
+func ExistingApplication(name ...string) (app *App, err error) {
 	app, err = Application(name...)
 	if err != nil {
 		return
