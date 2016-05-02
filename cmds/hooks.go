@@ -17,7 +17,12 @@ func runUpdateHooksCommand(c *cli.Context) {
 		logrus.Infoln(app.Name, "...")
 		err := app.UpdateHooks()
 		if err != nil {
-			logrus.Fatalln(err)
+			logrus.Fatalln("Hooks:", err)
+		}
+
+		err = app.UpdateConfig()
+		if err != nil {
+			logrus.Fatalln("Config:", err)
 		}
 	}
 }

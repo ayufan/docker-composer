@@ -4,6 +4,8 @@ const pushToCheckout = `#!/usr/bin/env bash
 
 set -eo pipefail
 
+cd ..
+
 trap 'git reset --hard' EXIT
 echo "Applying new changes..."
 git reset --hard >/dev/null

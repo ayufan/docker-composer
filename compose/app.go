@@ -57,6 +57,10 @@ func (a *App) UpdateHooks() error {
 	return nil
 }
 
+func (a *App) UpdateConfig() error {
+	return nil
+}
+
 func (a *App) Path(elem ...string) string {
 	return filepath.Join(append([]string{AppsDirectory, a.Name}, elem...)...)
 }
