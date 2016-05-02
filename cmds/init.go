@@ -17,7 +17,12 @@ func runInitCommand(c *cli.Context) {
 
 	err = apps.Init()
 	if err != nil {
-		logrus.Fatalln(err)
+		logrus.Fatalln("Init:", err)
+	}
+
+	err = apps.UpdateHooks()
+	if err != nil {
+		logrus.Fatalln("Hooks:", err)
 	}
 }
 
