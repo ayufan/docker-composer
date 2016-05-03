@@ -10,7 +10,7 @@ import (
 	"github.com/ayufan/docker-composer/helpers"
 )
 
-func runStatsCommand(c *cli.Context) {
+func runStatsCommand(c *cli.Context) error {
 	apps, err := compose.Apps(c.Args()...)
 	if err != nil {
 		logrus.Fatalln(err)
@@ -35,6 +35,7 @@ func runStatsCommand(c *cli.Context) {
 	if err != nil {
 		logrus.Fatalln("Run:", err)
 	}
+	return nil
 }
 
 func init() {

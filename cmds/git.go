@@ -10,7 +10,7 @@ import (
 	"github.com/ayufan/docker-composer/helpers"
 )
 
-func runGitReceivePackCommand(c *cli.Context) {
+func runGitReceivePackCommand(c *cli.Context) error {
 	app, err := compose.ExistingApplication(c.Args()...)
 	if err != nil {
 		logrus.Fatalln("Application:", err)
@@ -19,13 +19,10 @@ func runGitReceivePackCommand(c *cli.Context) {
 	cmd := helpers.Git("receive-pack", app.Path())
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
-	err = cmd.Run()
-	if err != nil {
-		logrus.Fatalln("Git:", err)
-	}
+	return cmd.Run()
 }
 
-func runGitUploadPackCommand(c *cli.Context) {
+func runGitUploadPackCommand(c *cli.Context) error {
 	app, err := compose.ExistingApplication(c.Args()...)
 	if err != nil {
 		logrus.Fatalln("Application:", err)
@@ -34,10 +31,7 @@ func runGitUploadPackCommand(c *cli.Context) {
 	cmd := helpers.Git("upload-pack", app.Path())
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
-	err = cmd.Run()
-	if err != nil {
-		logrus.Fatalln("Git:", err)
-	}
+	return cmd.Run()
 }
 
 func init() {

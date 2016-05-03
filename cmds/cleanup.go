@@ -6,7 +6,7 @@ import (
 	"github.com/ayufan/docker-composer/helpers"
 )
 
-func runCleanupCommand(c *cli.Context) {
+func runCleanupCommand(c *cli.Context) error {
 	if c.BoolT("containers") {
 		helpers.System("docker ps -f status=exited -f status=dead -aq | xargs -r docker rm -f")
 	}
@@ -22,6 +22,7 @@ func runCleanupCommand(c *cli.Context) {
 	if c.BoolT("unused-images") {
 		helpers.System("docker images -q | xargs -r docker rmi")
 	}
+	return nil
 }
 
 func init() {

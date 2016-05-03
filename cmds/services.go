@@ -7,7 +7,7 @@ import (
 	"github.com/ayufan/docker-composer/compose"
 )
 
-func runServicesCommand(c *cli.Context) {
+func runServicesCommand(c *cli.Context) error {
 	app, err := compose.ExistingApplication(c.Args()...)
 	if err != nil {
 		logrus.Fatalln("App:", err)
@@ -17,6 +17,7 @@ func runServicesCommand(c *cli.Context) {
 	if err != nil {
 		logrus.Fatalln("Compose:", err)
 	}
+	return nil
 }
 
 func init() {

@@ -30,7 +30,7 @@ var composeAppCommands map[string]string = map[string]string{
 	"up":      "Create and start containers",
 }
 
-func runComposeCommand(c *cli.Context) {
+func runComposeCommand(c *cli.Context) error {
 	if c.NArg() < 1 {
 		logrus.Fatalln("Missing application name")
 	}
@@ -44,6 +44,7 @@ func runComposeCommand(c *cli.Context) {
 	if err != nil {
 		logrus.Fatalln("Compose:", err)
 	}
+	return nil
 }
 
 func init() {

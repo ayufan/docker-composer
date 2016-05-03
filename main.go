@@ -80,5 +80,8 @@ func main() {
 	}
 
 	app.Commands = cmds.Commands
-	app.RunAndExitOnError()
+	err := app.Run(os.Args)
+	if err != nil {
+		logrus.Fatalln(err)
+	}
 }

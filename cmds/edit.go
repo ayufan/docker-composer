@@ -45,7 +45,7 @@ func editFile(name string) (err error) {
 	return cmd.Run()
 }
 
-func runEditCommand(c *cli.Context) {
+func runEditCommand(c *cli.Context) error {
 	app, err := compose.ExistingApplication(c.Args()...)
 	if err != nil {
 		logrus.Fatalln("App:", err)
@@ -78,7 +78,7 @@ func runEditCommand(c *cli.Context) {
 		logrus.Fatalln("Status:", err)
 	} else if !changed {
 		logrus.Infoln("Nothing changed.")
-		return
+		return nil
 	}
 
 	logrus.Infoln("Deploying...")
@@ -98,6 +98,7 @@ func runEditCommand(c *cli.Context) {
 	if err != nil {
 		logrus.Fatalln("Tag:", err)
 	}
+	return nil
 }
 
 func init() {

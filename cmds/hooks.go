@@ -7,7 +7,7 @@ import (
 	"github.com/ayufan/docker-composer/compose"
 )
 
-func runUpdateHooksCommand(c *cli.Context) {
+func runUpdateHooksCommand(c *cli.Context) error {
 	apps, err := compose.Apps(c.Args()...)
 	if err != nil {
 		logrus.Fatalln(err)
@@ -25,6 +25,7 @@ func runUpdateHooksCommand(c *cli.Context) {
 			logrus.Fatalln("Config:", err)
 		}
 	}
+	return nil
 }
 
 func init() {

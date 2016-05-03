@@ -7,7 +7,7 @@ import (
 	"github.com/ayufan/docker-composer/compose"
 )
 
-func runSwitchCommand(c *cli.Context) {
+func runSwitchCommand(c *cli.Context) error {
 	if c.NArg() != 2 {
 		logrus.Fatalln("Specify APP and REF")
 	}
@@ -29,6 +29,7 @@ func runSwitchCommand(c *cli.Context) {
 	}
 
 	app.Tag()
+	return nil
 }
 
 func init() {

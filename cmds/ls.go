@@ -10,7 +10,7 @@ import (
 	"github.com/ayufan/docker-composer/compose"
 )
 
-func runLsCommand(c *cli.Context) {
+func runLsCommand(c *cli.Context) error {
 	detail := c.Bool("detail")
 
 	apps, err := compose.Apps(c.Args()...)
@@ -31,6 +31,7 @@ func runLsCommand(c *cli.Context) {
 			println(app.Name)
 		}
 	}
+	return nil
 }
 
 func init() {

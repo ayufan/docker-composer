@@ -7,7 +7,7 @@ import (
 	"github.com/ayufan/docker-composer/compose"
 )
 
-func runDeployCommand(c *cli.Context) {
+func runDeployCommand(c *cli.Context) error {
 	var apps []*compose.App
 	var err error
 
@@ -36,6 +36,7 @@ func runDeployCommand(c *cli.Context) {
 	if err != nil {
 		logrus.Fatalln("Failed to deploy some of applications")
 	}
+	return nil
 }
 
 func init() {

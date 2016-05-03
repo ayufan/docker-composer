@@ -9,7 +9,7 @@ import (
 	"github.com/ayufan/docker-composer/compose"
 )
 
-func runInitCommand(c *cli.Context) {
+func runInitCommand(c *cli.Context) error {
 	apps, err := compose.Application(c.Args()...)
 	if err != nil {
 		logrus.Fatalln(err)
@@ -29,9 +29,10 @@ func runInitCommand(c *cli.Context) {
 	if err != nil {
 		logrus.Fatalln("Hooks:", err)
 	}
+	return nil
 }
 
-func runReleaseCommand(c *cli.Context) {
+func runReleaseCommand(c *cli.Context) error {
 	app, err := compose.ExistingApplication(c.Args()...)
 	if err != nil {
 		logrus.Fatalln(err)
@@ -62,6 +63,7 @@ func runReleaseCommand(c *cli.Context) {
 			logrus.Fatalln(err)
 		}
 	}
+	return nil
 }
 
 func init() {
