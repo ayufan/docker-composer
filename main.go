@@ -65,7 +65,7 @@ func main() {
 	}
 
 	defaultAction := app.Action
-	app.Action = func(c *cli.Context) {
+	app.Action = func(c *cli.Context) error {
 		if command := c.String("c"); command != "" {
 			args, err := shellwords.Parse(command)
 			if err != nil {
@@ -73,12 +73,9 @@ func main() {
 			}
 
 			args = append([]string{os.Args[0]}, args...)
-			err = app.Run(args)
-			if err != nil {
-				logrus.Fatalln(err)
-			}
+			return app.Run(args)
 		} else {
-			defaultAction(c)
+			return cli.HandleAction(defaultAction, c)
 		}
 	}
 
