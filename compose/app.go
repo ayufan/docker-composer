@@ -58,7 +58,9 @@ func (a *App) UpdateHooks() error {
 }
 
 func (a *App) UpdateConfig() error {
-	return nil
+	cmd := helpers.Git("config", "receive.denyCurrentBranch", "updateInstead")
+	cmd.Dir = a.Path()
+	return cmd.Run()
 }
 
 func (a *App) Path(elem ...string) string {
