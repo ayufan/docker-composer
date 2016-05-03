@@ -32,7 +32,7 @@ func init() {
 		Name:      "update-hooks",
 		Action:    runUpdateHooksCommand,
 		Usage:     "update hooks of applications",
-		Category:  "git",
+		Category:  "maintenance",
 		ArgsUsage: "APP...",
 	})
 }

@@ -35,7 +35,7 @@ func init() {
 	registerCommand(cli.Command{
 		Name:      "switch",
 		Action:    runSwitchCommand,
-		Usage:     "list all services of application",
+		Usage:     "switch application to different branch",
 		Category:  "manage",
 		ArgsUsage: "APP REF",
 	})
