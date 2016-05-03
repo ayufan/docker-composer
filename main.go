@@ -26,15 +26,17 @@ func main() {
 			EnvVar: "DEBUG",
 		},
 		cli.StringFlag{
-			Name:  "log-level, l",
-			Value: "info",
-			Usage: "Log level (options: debug, info, warn, error, fatal, panic)",
+			Name:   "log-level, l",
+			Value:  "info",
+			Usage:  "Log level (options: debug, info, warn, error, fatal, panic)",
+			EnvVar: "LOG_LEVEL",
 		},
 		cli.StringFlag{
 			Name:        "apps-dir",
 			Value:       "/srv/apps",
 			Usage:       "Directory where all the apps are stored",
 			Destination: &compose.AppsDirectory,
+			EnvVar:      "APPS_DIR",
 		},
 		cli.StringFlag{
 			Name:  "c",
