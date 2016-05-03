@@ -24,6 +24,17 @@ func Command(name string, args ...string) (cmd *exec.Cmd) {
 	return
 }
 
+func CommandOutput(name string, args ...string) (cmd *exec.Cmd) {
+	cmd = Command(name, args...)
+	cmd.Stdout = os.Stdout
+	return
+}
+
+func System(command string) (err error) {
+	cmd := CommandOutput("/bin/sh", "-c", "command")
+	return cmd.Run()
+}
+
 func Docker(command string, args ...string) (cmd *exec.Cmd) {
 	return Command("docker", append([]string{command}, args...)...)
 }
