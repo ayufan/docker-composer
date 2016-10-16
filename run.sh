@@ -4,7 +4,7 @@
 
 set -e
 
-IMAGE="ayufan/docker-composer:latest"
+DOCKER_IMAGE="ayufan/docker-composer:latest"
 DOCKER_RUN_OPTIONS=""
 DOCKER_ADDR=""
 VOLUMES="-v /srv/apps:/srv/apps"
@@ -25,4 +25,4 @@ if [ -t 1 ]; then
     DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -t"
 fi
 
-exec docker run --rm $DOCKER_RUN_OPTIONS $DOCKER_ADDR $VOLUMES $IMAGE "$@"
+exec docker run --rm $DOCKER_RUN_OPTIONS -e DOCKER_IMAGE $DOCKER_ADDR $VOLUMES $DOCKER_IMAGE "$@"
