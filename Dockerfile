@@ -1,6 +1,6 @@
 FROM docker/compose:1.7.0
 
-RUN ["apk", "add", "-U", "git", "bash", "docker", "nano", "perl", "sed", "go"]
+RUN ["apk", "add", "-U", "git", "bash", "docker", "nano", "perl", "sed", "go", "build-base"]
 RUN ["git", "config", "--global", "receive.denyCurrentBranch", "updateInstead"]
 RUN ["git", "config", "--global", "user.name", "Composer"]
 RUN ["git", "config", "--global", "user.email", "you@example.com"]
