@@ -13,5 +13,5 @@ git read-tree -u --reset "$1"
 echo "Deploying application..."
 docker-compose up -d --build --remove-orphans
 trap - EXIT
-git tag -f latest "$2"
+git tag -f latest "$1"
 `
