@@ -13,10 +13,5 @@ git read-tree -u --reset "$1"
 echo "Deploying application..."
 docker-compose up -d --build --remove-orphans
 trap - EXIT
-`
-
-const postReceive = `#!/usr/bin/env bash
-
-set -eo pipefail
-git tag "$2" -f latest
+git tag -f latest "$2"
 `

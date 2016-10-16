@@ -54,10 +54,6 @@ func (a *App) UpdateHooks() error {
 	if err != nil {
 		return fmt.Errorf("WriteHooks: %v", err)
 	}
-	err = ioutil.WriteFile(filepath.Join(hooksDir, "post-receive"), []byte(postReceive), 0700)
-	if err != nil {
-		return fmt.Errorf("WriteHooks: %v", err)
-	}
 	return nil
 }
 
