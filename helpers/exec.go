@@ -1,21 +1,9 @@
 package helpers
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
-	"syscall"
 )
-
-func Execve(cmd *exec.Cmd) error {
-	if cmd.Dir != "" {
-		err := os.Chdir(cmd.Dir)
-		if err != nil {
-			return fmt.Errorf("Chdir: %v", err)
-		}
-	}
-	return syscall.Exec(cmd.Path, cmd.Args, cmd.Env)
-}
 
 func Command(name string, args ...string) (cmd *exec.Cmd) {
 	cmd = exec.Command(name, args...)
@@ -31,7 +19,7 @@ func CommandOutput(name string, args ...string) (cmd *exec.Cmd) {
 }
 
 func System(command string) (err error) {
-	cmd := CommandOutput("/bin/sh", "-c", "command")
+	cmd := CommandOutput("/bin/sh", "-c", command)
 	return cmd.Run()
 }
 
