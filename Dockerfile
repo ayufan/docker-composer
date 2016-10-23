@@ -1,4 +1,4 @@
-FROM docker/compose:1.7.0
+FROM docker/compose:1.8.1
 
 RUN ["apk", "add", "-U", "git", "bash", "docker", "nano", "perl", "sed", "go", "build-base"]
 RUN ["git", "config", "--global", "receive.denyCurrentBranch", "updateInstead"]
