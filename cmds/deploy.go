@@ -7,6 +7,20 @@ import (
 	"github.com/ayufan/docker-composer/compose"
 )
 
+func deploySingleApplication(c *cli.Context, app *compose.App) (err error) {
+	logrus.Println(app.Name, "...")
+	if c.Bool("build") {
+		err = app.Build()
+	}
+	if err == nil && c.Bool("pull") {
+		err = app.Pull()
+	}
+	if err == nil {
+		err = app.Deploy()
+	}
+	return
+}
+
 func runDeployCommand(c *cli.Context) error {
 	var apps []*compose.App
 	var err error
@@ -23,13 +37,10 @@ func runDeployCommand(c *cli.Context) error {
 	}
 
 	for _, app := range apps {
-		logrus.Println(app.Name, "...")
-		appErr := app.Deploy()
+		appErr := deploySingleApplication(c, app)
 		if appErr != nil {
+			logrus.Errorln(err)
 			err = appErr
-		}
-		if appErr != nil {
-			logrus.Errorln(appErr)
 		}
 	}
 
@@ -47,6 +58,14 @@ func init() {
 		Category:  "global",
 		ArgsUsage: "APP...",
 		Flags: []cli.Flag{
+			cli.BoolTFlag{
+				Name:  "pull",
+				Usage: "pull images",
+			},
+			cli.BoolTFlag{
+				Name:  "build",
+				Usage: "build images",
+			},
 			cli.BoolFlag{
 				Name:  "all",
 				Usage: "deploy all applications",

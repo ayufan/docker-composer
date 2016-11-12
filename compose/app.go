@@ -114,8 +114,30 @@ func (a *App) Validate() (err error) {
 	return cmd.Run()
 }
 
+func (a *App) Pull(args ...string) (err error) {
+	cmd := helpers.Compose("pull", a.Path(), "--ignore-pull-failures")
+	cmd.Args = append(cmd.Args, args...)
+	cmd.Stdout = os.Stdout
+	err = cmd.Run()
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (a *App) Build(args ...string) (err error) {
+	cmd := helpers.Compose("build", a.Path(), "--pull")
+	cmd.Args = append(cmd.Args, args...)
+	cmd.Stdout = os.Stdout
+	err = cmd.Run()
+	if err != nil {
+		return
+	}
+	return
+}
+
 func (a *App) Deploy(args ...string) (err error) {
-	cmd := helpers.Compose("up", a.Path(), "--build", "--remove-orphans", "-d")
+	cmd := helpers.Compose("up", a.Path(), "--remove-orphans", "-d")
 	cmd.Args = append(cmd.Args, args...)
 	cmd.Stdout = os.Stdout
 	err = cmd.Run()
