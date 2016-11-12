@@ -46,11 +46,11 @@ func init() {
 			},
 			cli.BoolTFlag{
 				Name:  "images",
-				Usage: "don't cleanup unused images",
+				Usage: "cleanup dangling images",
 			},
 			cli.BoolTFlag{
 				Name:  "unused-images",
-				Usage: "don't cleanup unused images",
+				Usage: "cleanup unused images",
 			},
 		},
 	})
