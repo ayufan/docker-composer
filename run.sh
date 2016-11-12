@@ -4,7 +4,7 @@
 
 set -e
 
-DOCKER_IMAGE="ayufan/docker-composer:latest"
+export DOCKER_IMAGE="ayufan/docker-composer:latest"
 DOCKER_RUN_OPTIONS=""
 DOCKER_ADDR=""
 VOLUMES="-v /srv/apps:/srv/apps"

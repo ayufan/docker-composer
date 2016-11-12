@@ -11,7 +11,7 @@ import (
 var dockerImage = os.Getenv("DOCKER_IMAGE")
 
 func runUpgradeCommand(c *cli.Context) error {
-	cmd := helpers.Docker("docker", "pull", dockerImage)
+	cmd := helpers.Docker("pull", dockerImage)
 	cmd.Stdout = os.Stdout
 	return cmd.Run()
 }
