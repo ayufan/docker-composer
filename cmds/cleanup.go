@@ -8,7 +8,7 @@ import (
 
 func runCleanupCommand(c *cli.Context) error {
 	if c.BoolT("containers") {
-		helpers.System("docker ps -f status=exited -f status=dead -aq | xargs -r docker rm -f")
+		helpers.System("docker ps -f status=exited -f status=dead -a --format '{{.ID}}\t{{.Labels}}' | grep -v com.docker.compose | awk '{print $1}' | xargs -r docker rm -f")
 	}
 	if c.BoolT("run-containers") {
 		helpers.System("docker ps -f label=com.docker.compose.oneoff=True -aq | xargs -r docker rm -f")
