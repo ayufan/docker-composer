@@ -6,10 +6,10 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
+	"github.com/mattn/go-shellwords"
 
 	"github.com/ayufan/docker-composer/cmds"
 	"github.com/ayufan/docker-composer/compose"
-	"github.com/mattn/go-shellwords"
 )
 
 func main() {
@@ -74,9 +74,9 @@ func main() {
 
 			args = append([]string{os.Args[0]}, args...)
 			return app.Run(args)
-		} else {
-			return cli.HandleAction(defaultAction, c)
 		}
+
+		return cli.HandleAction(defaultAction, c)
 	}
 
 	app.Commands = cmds.Commands

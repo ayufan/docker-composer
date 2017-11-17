@@ -1,15 +1,16 @@
 package compose
 
 import (
+	"errors"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/Sirupsen/logrus"
 
-	"fmt"
 	"github.com/ayufan/docker-composer/helpers"
-	"io/ioutil"
 )
 
 var AppsDirectory string
@@ -20,6 +21,7 @@ const (
 	StatusPartial             = "partial"
 	StatusError               = "error"
 	StatusNoContainers        = "no containers"
+	StatusDisabled            = "disabled"
 )
 
 type App struct {
@@ -114,6 +116,30 @@ func (a *App) Validate() (err error) {
 	return cmd.Run()
 }
 
+func (a *App) IsEnabled() bool {
+	path := a.Path("disabled")
+	_, err := os.Stat(path)
+	if err != nil {
+		a.log("IsEnabled").WithError(err).Debugln("Stat")
+		return false
+	}
+	return true
+}
+
+func (a *App) Enable() error {
+	path := a.Path("disabled")
+	err := os.Remove(path)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	return err
+}
+
+func (a *App) Disable() error {
+	path := a.Path("disabled")
+	return ioutil.WriteFile(path, []byte{}, 0600)
+}
+
 func (a *App) Pull(args ...string) (err error) {
 	cmd := helpers.Compose("pull", a.Path(), "--ignore-pull-failures")
 	cmd.Args = append(cmd.Args, args...)
@@ -137,6 +163,10 @@ func (a *App) Build(args ...string) (err error) {
 }
 
 func (a *App) Deploy(args ...string) (err error) {
+	if !a.IsEnabled() {
+		return errors.New("application disabled")
+	}
+
 	cmd := helpers.Compose("up", a.Path(), "--remove-orphans", "-d")
 	cmd.Args = append(cmd.Args, args...)
 	cmd.Stdout = os.Stdout
@@ -220,7 +250,11 @@ func (a *App) Status() (status string, err error) {
 	} else if running {
 		return StatusRunning, err
 	} else if notrunning {
-		return StatusNotRunning, err
+		if a.IsEnabled() {
+			return StatusNotRunning, err
+		} else {
+			return StatusDisabled, err
+		}
 	} else {
 		return StatusError, err
 	}

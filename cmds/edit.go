@@ -1,15 +1,16 @@
 package cmds
 
 import (
+	"errors"
+	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
 
-	"errors"
-	"fmt"
 	"github.com/ayufan/docker-composer/compose"
 	"github.com/ayufan/docker-composer/helpers"
-	"os"
-	"path/filepath"
 )
 
 func gitEditor() (editor string, err error) {
