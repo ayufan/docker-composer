@@ -22,11 +22,12 @@ func deploySingleApplication(c *cli.Context, app *compose.App) (err error) {
 }
 
 func runDeployCommand(c *cli.Context) error {
-	var apps []*compose.App
+	var apps compose.AppList
 	var err error
 
 	if c.Bool("all") {
 		apps, err = compose.Apps()
+		apps = apps.OnlyEnabled()
 	} else if c.NArg() != 0 {
 		apps, err = compose.Apps(c.Args()...)
 	} else {

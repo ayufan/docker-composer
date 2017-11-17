@@ -6,7 +6,18 @@ import (
 	"os"
 )
 
-func Apps(filters ...string) (apps []*App, err error) {
+type AppList []*App
+
+func (list AppList) OnlyEnabled() (newList AppList) {
+	for _, app := range list {
+		if app.IsEnabled() {
+			newList = append(newList, app)
+		}
+	}
+	return
+}
+
+func Apps(filters ...string) (apps AppList, err error) {
 	dir, err := os.Open(AppsDirectory)
 	if err != nil {
 		return
