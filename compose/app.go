@@ -121,9 +121,9 @@ func (a *App) IsEnabled() bool {
 	_, err := os.Stat(path)
 	if err != nil {
 		a.log("IsEnabled").WithError(err).Debugln("Stat")
-		return false
+		return true
 	}
-	return true
+	return false
 }
 
 func (a *App) Enable() error {
@@ -228,7 +228,11 @@ func (a *App) Status() (status string, err error) {
 		return StatusNoContainers, err
 	}
 	if len(containers) == 0 {
-		return StatusNotRunning, nil
+		if a.IsEnabled() {
+			return StatusNotRunning, err
+		} else {
+			return StatusDisabled, err
+		}
 	}
 	cmd := helpers.Docker("inspect", "--format", "{{.State.Running}}")
 	cmd.Args = append(cmd.Args, containers...)
