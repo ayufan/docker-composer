@@ -1,10 +1,7 @@
 package cmds
 
 import (
-	"errors"
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
@@ -13,39 +10,6 @@ import (
 	"github.com/ayufan/docker-composer/helpers"
 )
 
-func gitEditor() (editor string, err error) {
-	editor = os.Getenv("GIT_EDITOR")
-	term := os.Getenv("TERM")
-	isDumb := term == "" || term == "dumb"
-
-	if editor == "" && !isDumb {
-		editor = os.Getenv("VISUAL")
-	}
-	if editor == "" {
-		editor = os.Getenv("EDITOR")
-	}
-	if editor == "" && isDumb {
-		return "", errors.New("No GIT_EDITOR defined")
-	}
-	if editor == "" {
-		editor = "vi"
-	}
-	return
-}
-
-func editFile(name string) (err error) {
-	editor, err := gitEditor()
-	if err != nil {
-		return
-	}
-
-	logrus.Infoln("Editing", filepath.Base(name), "...")
-	cmd := helpers.Command(editor, name)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	return cmd.Run()
-}
-
 func runEditCommand(c *cli.Context) error {
 	app, err := compose.ExistingApplication(c.Args()...)
 	if err != nil {
@@ -53,7 +17,7 @@ func runEditCommand(c *cli.Context) error {
 	}
 
 	for {
-		err = editFile(app.Path("docker-compose.yml"))
+		err = helpers.EditFile(app.Path("docker-compose.yml"))
 		if err != nil {
 			logrus.Fatalln(err)
 		}

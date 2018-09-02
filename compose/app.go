@@ -1,6 +1,7 @@
 package compose
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -52,9 +53,13 @@ func (a *App) UpdateHooks() error {
 	if err != nil {
 		return fmt.Errorf("MkdirHooks: %v", err)
 	}
-	err = ioutil.WriteFile(filepath.Join(hooksDir, "push-to-checkout"), []byte(pushToCheckout), 0700)
+	appPath, err := filepath.Abs(os.Args[0])
 	if err != nil {
-		return fmt.Errorf("WriteHooks: %v", err)
+		return fmt.Errorf("AppPath: %v", err)
+	}
+	err = os.Symlink(appPath, filepath.Join(hooksDir, "push-to-checkout"))
+	if err != nil {
+		return fmt.Errorf("Symlink/push-to-checkout: %v", err)
 	}
 	return nil
 }
@@ -82,6 +87,38 @@ func (a *App) Git(args ...string) (err error) {
 	return cmd.Run()
 }
 
+func (a *App) SupportsEnv() (bool, error) {
+	var buffer bytes.Buffer
+
+	cmd := helpers.Git("ls-files", ".env")
+	cmd.Dir = a.Path()
+	cmd.Stdout = &buffer
+	err := cmd.Run()
+	if err != nil {
+		return false, err
+	}
+
+	// no .env in output means that file is not tracked
+	return buffer.Len() == 0, nil
+}
+
+func (a *App) Env() (string, error) {
+	status, err := a.SupportsEnv()
+	if err != nil {
+		return "", err
+	}
+
+	if !status {
+		return "", nil
+	}
+
+	data, err := ioutil.ReadFile(a.Path(".env"))
+	if os.IsNotExist(err) {
+		err = nil
+	}
+	return string(data), err
+}
+
 func (a *App) Changed() (bool, error) {
 	cmd := helpers.Git("status", "-s")
 	cmd.Dir = a.Path()
@@ -99,8 +136,8 @@ func (a *App) Commit(message string) error {
 	return a.Git("commit", "-m", message)
 }
 
-func (a *App) Tag() (err error) {
-	return a.Git("tag", "-f", "latest")
+func (a *App) Tag(args ...string) (err error) {
+	return a.Git(append([]string{"tag", "-f", "latest"}, args...)...)
 }
 
 func (a *App) Reset(name string) (err error) {
