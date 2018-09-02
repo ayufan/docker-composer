@@ -1,15 +1,19 @@
-FROM docker/compose:1.8.1
+FROM golang:alpine as build
+COPY . $GOPATH/src/github.com/ayufan/docker-composer/
+RUN go install -v github.com/ayufan/docker-composer
 
-RUN ["apk", "add", "-U", "git", "bash", "docker", "nano", "perl", "sed", "go", "build-base"]
-RUN ["git", "config", "--global", "receive.denyCurrentBranch", "updateInstead"]
-RUN ["git", "config", "--global", "user.name", "Composer"]
-RUN ["git", "config", "--global", "user.email", "you@example.com"]
+FROM docker/compose:1.22.0
 
-ENV APPS_DIR=/srv/apps
-ADD /examples/ /srv/apps/
+RUN apk add -U git docker && \
+  git config --global receive.denyCurrentBranch updateInstead && \
+  git config --global user.name Composer && \
+  git config --global user.email you@example.com
+
+ENV APPS_DIR=/srv/apps \
+  GOPATH=/go
+
+COPY --from=0 /go/bin/docker-composer /usr/bin/composer
 VOLUME ["/srv/apps"]
-ENV GOPATH=/go
-ADD / $GOPATH/src/github.com/ayufan/docker-composer
-RUN cd $GOPATH/src/github.com/ayufan/docker-composer && go get -v ./... && go build -o /usr/bin/composer
+ADD examples/ /srv/apps/
 
 ENTRYPOINT ["/usr/bin/composer"]

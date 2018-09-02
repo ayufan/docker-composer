@@ -1,6 +1,6 @@
 package compose
 
-const pushToCheckout = `#!/usr/bin/env bash
+const pushToCheckout = `#!/usr/bin/env sh
 
 set -eo pipefail
 
