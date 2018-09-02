@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 	"path"
+	"path/filepath"
+	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
@@ -11,6 +13,34 @@ import (
 	"github.com/ayufan/docker-composer/cmds"
 	"github.com/ayufan/docker-composer/compose"
 )
+
+func init() {
+	workTree := os.Getenv("GIT_WORK_TREE")
+	if workTree == "" {
+		return
+	}
+	workTree = filepath.Clean(workTree)
+
+	hookPath, err := filepath.Abs(os.Args[0])
+	if err != nil {
+		logrus.Fatalln("Abs:", err)
+	}
+
+	hookName := filepath.Base(hookPath)
+	hooksDir := filepath.Dir(hookPath)
+	if !strings.HasSuffix(hooksDir, "/.git/hooks") {
+		return
+	}
+
+	link, err := os.Readlink(os.Args[0])
+	if err != nil {
+		logrus.Fatalln("Readlink:", err)
+	}
+
+	appName := filepath.Base(workTree)
+
+	os.Args = append([]string{link, "git-" + hookName, appName}, os.Args[1:]...)
+}
 
 func main() {
 	app := cli.NewApp()
