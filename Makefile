@@ -16,12 +16,13 @@ all: $(addsuffix -docker-build, $(BUILD_ARCHS))
 
 dockerhub: $(addsuffix -dockerhub, $(BUILD_ARCHS))
 	-rm -rf ~/.docker/manifests
+	docker manifest rm $(REGISTRY):$(TAG)
 	docker manifest create $(REGISTRY):$(TAG) \
 		$(addprefix $(REGISTRY):$(TAG)-, $(BUILD_ARCHS))
 	docker manifest push $(REGISTRY):$(TAG)
 
 tag:
-	make dockerhub TAG=$(shell git describe --exact-match)
+	+make dockerhub TAG=$(shell git describe --exact-match)
 
 tag-latest:
-	make dockerhub TAG=latest
+	+make dockerhub TAG=latest
