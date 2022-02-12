@@ -2,7 +2,7 @@ package cmds
 
 import (
 	"github.com/sirupsen/logrus"
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 
 	"github.com/ayufan/docker-composer/compose"
 )

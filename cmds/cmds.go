@@ -3,7 +3,7 @@ package cmds
 import (
 	"sort"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 )
 
 type CommandSlice []cli.Command

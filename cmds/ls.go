@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/sirupsen/logrus"
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 	"github.com/ryanuber/columnize"
 
 	"github.com/ayufan/docker-composer/compose"

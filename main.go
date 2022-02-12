@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/sirupsen/logrus"
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 	"github.com/mattn/go-shellwords"
 
 	"github.com/ayufan/docker-composer/cmds"

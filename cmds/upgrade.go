@@ -3,7 +3,7 @@ package cmds
 import (
 	"os"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 
 	"github.com/ayufan/docker-composer/helpers"
 )
