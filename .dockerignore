@@ -1,3 +1,4 @@
 Dockerfile
 *.sh
 docker-composer
+Makefile
