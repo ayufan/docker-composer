@@ -15,8 +15,7 @@ all: $(addsuffix -docker-build, $(BUILD_ARCHS))
 	docker push $(REGISTRY):$(TAG)-$*
 
 dockerhub: $(addsuffix -dockerhub, $(BUILD_ARCHS))
-	-rm -rf ~/.docker/manifests
-	docker manifest rm $(REGISTRY):$(TAG)
+	-docker manifest rm $(REGISTRY):$(TAG)
 	docker manifest create $(REGISTRY):$(TAG) \
 		$(addprefix $(REGISTRY):$(TAG)-, $(BUILD_ARCHS))
 	docker manifest push $(REGISTRY):$(TAG)
