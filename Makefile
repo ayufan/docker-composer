@@ -25,3 +25,6 @@ tag:
 
 tag-latest:
 	+make dockerhub TAG=latest
+
+dev-env:
+	docker run --rm -it -w /go/src/github.com/ayufan/docker-composer -v $(CURDIR):/go/src/github.com/ayufan/docker-composer golang:alpine /bin/sh
