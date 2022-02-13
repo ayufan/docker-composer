@@ -5,7 +5,7 @@
 set -e
 
 export DOCKER_IMAGE="ayufan/docker-composer:${DOCKER_COMPOSER_TAG-latest}"
-DOCKER_RUN_OPTIONS=""
+DOCKER_RUN_OPTIONS="-e GIT_EDITOR -e EDITOR -e VISUAL -e TERM"
 DOCKER_ADDR=""
 VOLUMES="-v /srv/apps:/srv/apps"
 
@@ -20,7 +20,7 @@ else
 fi
 
 # Only allocate tty if we detect one
-DOCKER_RUN_OPTIONS="-i"
+DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -i"
 if [ -t 1 ]; then
     DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -t"
 fi

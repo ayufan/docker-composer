@@ -23,7 +23,7 @@ func GitEditor() (editor string, err error) {
 		return "", errors.New("No GIT_EDITOR defined")
 	}
 	if editor == "" {
-		editor = "vi"
+		editor = "vim"
 	}
 	return
 }

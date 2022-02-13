@@ -8,7 +8,7 @@ RUN cd $GOPATH/src/github.com/ayufan/docker-composer/ && \
 
 FROM ${ARCH}alpine:latest
 
-RUN apk add -U git docker bash docker-compose && \
+RUN apk add -U git docker bash docker-compose vim nano && \
   git config --global receive.denyCurrentBranch updateInstead && \
   git config --global user.name Composer && \
   git config --global user.email you@example.com
