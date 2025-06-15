@@ -1,12 +1,13 @@
 ARG ARCH=
-FROM ${ARCH}golang:alpine as build
+ARG REPO=
+FROM --platform=${ARCH} ${REPO}golang:alpine as build
 COPY . $GOPATH/src/github.com/ayufan/docker-composer/
 RUN cd $GOPATH/src/github.com/ayufan/docker-composer/ && \
   go mod init && \
   go mod tidy && \
   go install -v ./...
 
-FROM ${ARCH}alpine:latest
+FROM --platform=${ARCH} ${REPO}alpine:latest
 
 RUN apk add -U git docker bash docker-compose vim nano && \
   git config --global receive.denyCurrentBranch updateInstead && \

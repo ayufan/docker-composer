@@ -7,7 +7,8 @@ all: $(addsuffix -docker-build, $(BUILD_ARCHS))
 %-docker-build:
 	docker build \
 		--tag $(REGISTRY):$(TAG)-$* \
-		--build-arg ARCH=$*/ \
+		--build-arg ARCH=linux/$(subst arm32v,arm/v,$(subst arm64v,arm64/v,$*)) \
+		--build-arg REPO=$*/ \
 		-f Dockerfile \
 		.
 
