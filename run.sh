@@ -4,10 +4,23 @@
 
 set -e
 
+SCRIPT_PATH="$(readlink -f "$0")"
+
 export DOCKER_IMAGE="ayufan/docker-composer:${DOCKER_COMPOSER_TAG-latest}"
 DOCKER_RUN_OPTIONS="-e GIT_EDITOR -e EDITOR -e VISUAL -e TERM"
 DOCKER_ADDR=""
 VOLUMES="-v /srv/apps:/srv/apps"
+
+# Install user if missing
+if ! id -u compose &>/dev/null; then
+    sudo useradd -m -G docker -s "$SCRIPT_PATH" compose
+    sudo install -d -m 700 ~compose/.ssh -o compose -g compose
+    if [ -e ~/.ssh/authorized_keys ]; then
+      sudo cp ~/.ssh/authorized_keys ~compose/.ssh/authorized_keys
+      sudo chown compose:compose ~compose/.ssh/authorized_keys
+      sudo chmod 600 ~compose/.ssh/authorized_keys
+    fi
+fi
 
 # Setup options for connecting to docker host
 if [ -z "$DOCKER_HOST" ]; then
