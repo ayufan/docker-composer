@@ -8,13 +8,15 @@ SCRIPT_PATH="$(readlink -f "$0")"
 SELF_URL="https://raw.githubusercontent.com/ayufan/docker-composer/refs/heads/master/run.sh"
 
 # Self-update if --update flag is passed
-if [[ "$1" == "--update" ]]; then
+if [ "$1" = "--update" ]; then
     echo "Updating script from $SELF_URL..."
-    curl -fsSL "$SELF_URL" -o "/tmp/compose-run.sh"
-    chmod +x "/tmp/compose-run.sh"
-    mv "/tmp/compose-run.sh" "$SCRIPT_PATH"
-    echo "Update complete."
-    exit 0
+    if curl -fsSL "$SELF_URL" -o "/tmp/compose-run.sh" && chmod +x "/tmp/compose-run.sh" && mv "/tmp/compose-run.sh" "$SCRIPT_PATH"; then
+        echo "Update complete."
+        exit 0
+    else
+        echo "Update failed."
+        exit 1
+    fi
 fi
 
 export DOCKER_IMAGE="ayufan/docker-composer:${DOCKER_COMPOSER_TAG-latest}"
