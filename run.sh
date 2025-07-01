@@ -25,7 +25,7 @@ DOCKER_ADDR=""
 VOLUMES="-v /srv/apps:/srv/apps"
 
 # Install user if missing
-if ! id -u compose &>/dev/null; then
+if ! id -u compose >/dev/null 2>&1; then
     sudo useradd -m -G docker -s "$SCRIPT_PATH" compose
     sudo install -d -m 700 ~compose/.ssh -o compose -g compose
     if [ -e ~/.ssh/authorized_keys ]; then
