@@ -20,9 +20,11 @@ if [ "$1" = "--update" ]; then
 fi
 
 export DOCKER_IMAGE="ayufan/docker-composer:${DOCKER_COMPOSER_TAG-latest}"
-DOCKER_RUN_OPTIONS="-e GIT_EDITOR -e EDITOR -e VISUAL -e TERM"
+export APPS_DIR=$(realpath "${APPS_DIR:-/srv/apps}")
+
+DOCKER_RUN_OPTIONS="-e GIT_EDITOR -e EDITOR -e VISUAL -e TERM -e APPS_DIR"
 DOCKER_ADDR=""
-VOLUMES="-v /srv/apps:/srv/apps"
+VOLUMES=""
 
 # Install user if missing
 if ! id -u compose >/dev/null 2>&1; then
@@ -51,4 +53,4 @@ if [ -t 1 ]; then
     DOCKER_RUN_OPTIONS="$DOCKER_RUN_OPTIONS -t"
 fi
 
-exec docker run --rm $DOCKER_RUN_OPTIONS -e DOCKER_IMAGE $DOCKER_ADDR $VOLUMES $DOCKER_IMAGE "$@"
+exec docker run --rm $DOCKER_RUN_OPTIONS -v "$APPS_DIR:$APPS_DIR" -e DOCKER_IMAGE $DOCKER_ADDR $VOLUMES $DOCKER_IMAGE "$@"
