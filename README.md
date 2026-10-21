@@ -203,3 +203,7 @@ The images are multi-architecture (`amd64`, `arm32v7`, `arm64v8`) and
 published to [`ayufan/docker-composer`](https://hub.docker.com/r/ayufan/docker-composer).
 Pushing to `main` publishes `beta`; the *Build* and *Make latest* workflows
 publish versions on demand.
+
+## License
+
+[MIT](LICENSE), Kamil Trzciński.
