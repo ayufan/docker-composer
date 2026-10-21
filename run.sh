@@ -5,7 +5,7 @@
 set -e
 
 SCRIPT_PATH="$(readlink -f "$0")"
-SELF_URL="https://raw.githubusercontent.com/ayufan/docker-composer/refs/heads/master/run.sh"
+SELF_URL="https://raw.githubusercontent.com/ayufan/docker-composer/refs/heads/main/run.sh"
 
 # Self-update if --update flag is passed
 if [ "$1" = "--update" ]; then
