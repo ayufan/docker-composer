@@ -1,0 +1,81 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to publish, empty picks the next patch version
+        required: false
+        default: ""
+      push_tag:
+        description: Also push the version as a git tag
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dockerhub-${{ github.ref }}
+
+jobs:
+  dockerhub:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          version="${INPUT_VERSION:-}"
+          if [ "$GITHUB_EVENT_NAME" != workflow_dispatch ]; then
+            version=beta
+            echo "Push to $GITHUB_REF_NAME, publishing $version"
+          elif [ -n "$version" ]; then
+            echo "Publishing requested version $version"
+          else
+            previous=$(git tag --list --sort=-v:refname |
+              grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1 || true)
+
+            if [ -z "$previous" ]; then
+              version=0.1.0
+              echo "No version tagged yet, starting at $version"
+            else
+              prefix=
+              case "$previous" in v*) prefix=v ;; esac
+
+              IFS=. read -r major minor patch <<<"${previous#v}"
+              version="$prefix$major.$minor.$((patch + 1))"
+              echo "Last version is $previous, publishing $version"
+            fi
+          fi
+
+          echo "TAG=$version" >>"$GITHUB_ENV"
+
+      - name: Enable foreign architectures
+        uses: docker/setup-qemu-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Publish version
+        run: make dockerhub TAG="$TAG"
+
+      - name: Push the version as a git tag
+        if: inputs.push_tag
+        run: |
+          git tag "$TAG"
+          git push origin "refs/tags/$TAG"
